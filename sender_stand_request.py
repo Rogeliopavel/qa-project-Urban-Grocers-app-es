@@ -6,17 +6,21 @@ import data
 def post_new_user(body):
     return requests.post(configuration.URL_SERVICE + configuration.CREATE_USER_PATH,
                          json=body,
-                         headers=data.headers)
+                         headers={"Content-Type": "application/json"})
 
 authToken = post_new_user(data.user_body)
 print(authToken.status_code)
 print(authToken.json())
 
 #Creacion de un kit para el usuario.
-def post_new_client_kit(kit_body,auth_Token):
+def post_new_client_kit(kit_body,auth_token):
+    kit_headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {auth_token.json()['authToken']}"
+    }
     return requests.post(configuration.URL_SERVICE + configuration.KITS_PATH,
                          json=kit_body,
-                         headers=data.kit_headers)
+                         headers=kit_headers)
 
 response = post_new_client_kit(data.kit_body,authToken)
 print(response.status_code)
